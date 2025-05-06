@@ -2,14 +2,43 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>N950 bengal</title>
+  <title>N950 Bengal Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    .button {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <button onclick="abrirConfiguracion()">Abrir Configuración</button>
-  <button onclick="abrirLauncher()">Abrir Launcher</button>
-  <button onclick="abrirTelegram()">Abrir Telegram Web</button>
-  <button onclick="abrirGoogle()">Abrir Google</button>
-  <button onclick="abrirYouTube()">Abrir YouTube</button>
+  <h1>N950 Bengal Test</h1>
+  <button class="button" onclick="abrirConfiguracion()">Abrir Configuración</button>
+  <button class="button" onclick="abrirLauncher()">Abrir Launcher</button>
+  <button class="button" onclick="abrirTelegram()">Abrir Telegram Web</button>
+  <button class="button" onclick="abrirGoogle()">Abrir Google</button>
+  <button class="button" onclick="abrirYouTube()">Abrir YouTube</button>
+  <button class="button" onclick="llamar()">Llamar al *444</button>
+  <button class="button" onclick="recargarPagina()">Recargar Página</button>
   <script>
     function abrirConfiguracion() {
       window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
@@ -25,6 +54,12 @@
     }
     function abrirYouTube() {
       window.open("https://www.youtube.com", "_blank");
+    }
+    function llamar() {
+      window.location.href = "tel:*444";
+    }
+    function recargarPagina() {
+      location.reload();
     }
   </script>
 </body>
