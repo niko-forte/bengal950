@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>N950 Bengal Test</title>
+</head>
+<body>
+  <button onclick="abrirConfiguracion()">Abrir Configuración</button>
+  <button onclick="abrirTelegram()">Abrir Telegram Web</button>
+
+  <script>
+    function abrirConfiguracion() {
+      window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
+    }
+
+    function abrirTelegram() {
+      window.open("https://web.telegram.org/", "_blank");
+    }
+  </script>
+</body>
+</html>
