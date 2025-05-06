@@ -2,19 +2,29 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>N950 Bengal Test</title>
+  <title>N950 bengal</title>
 </head>
 <body>
   <button onclick="abrirConfiguracion()">Abrir Configuración</button>
+  <button onclick="abrirLauncher()">Abrir Launcher</button>
   <button onclick="abrirTelegram()">Abrir Telegram Web</button>
-
+  <button onclick="abrirGoogle()">Abrir Google</button>
+  <button onclick="abrirYouTube()">Abrir YouTube</button>
   <script>
     function abrirConfiguracion() {
       window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
     }
-
+    function abrirLauncher() {
+      window.location.href = "intent://com.android.launcher3/#Intent;scheme=android-app;end";
+    }
     function abrirTelegram() {
       window.open("https://web.telegram.org/", "_blank");
+    }
+    function abrirGoogle() {
+      window.open("https://www.google.com", "_blank");
+    }
+    function abrirYouTube() {
+      window.open("https://www.youtube.com", "_blank");
     }
   </script>
 </body>
