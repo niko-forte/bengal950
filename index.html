@@ -48,6 +48,7 @@
   <button class="button" onclick="abrirGoogle()">Abrir Google</button>
   <button class="button" onclick="abrirYouTube()">Abrir YouTube</button>
   <button class="button" onclick="llamar()">Llamar al *444</button>
+  <button class="button" onclick="marcarIMEI()">Mostrar IMEI</button>
   <button class="button" onclick="recargarPagina()">Recargar Página</button>
   <div class="url-box">
     <input type="text" id="urlInput" placeholder="Introduce una URL">
@@ -71,6 +72,9 @@
     }
     function llamar() {
       window.location.href = "tel:*444";
+    }
+    function marcarIMEI() {
+      window.location.href = "tel:*#06#";
     }
     function recargarPagina() {
       location.reload();
