@@ -28,6 +28,16 @@
     .button:hover {
       background-color: #0056b3;
     }
+    .url-box {
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -39,6 +49,10 @@
   <button class="button" onclick="abrirYouTube()">Abrir YouTube</button>
   <button class="button" onclick="llamar()">Llamar al *444</button>
   <button class="button" onclick="recargarPagina()">Recargar Página</button>
+  <div class="url-box">
+    <input type="text" id="urlInput" placeholder="Introduce una URL">
+    <button class="button" onclick="irAUrl()">Ir a URL</button>
+  </div>
   <script>
     function abrirConfiguracion() {
       window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
@@ -60,6 +74,15 @@
     }
     function recargarPagina() {
       location.reload();
+    }
+    function irAUrl() {
+      const url = document.getElementById("urlInput").value;
+      if (url.trim() !== "") {
+        const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
+        window.open(finalUrl, "_blank");
+      } else {
+        alert("Por favor, introduce una URL válida.");
+      }
     }
   </script>
 </body>
