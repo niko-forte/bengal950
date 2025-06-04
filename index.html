@@ -82,7 +82,10 @@
 
   <script>
     function abrirConfiguracion() {
-      window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      iframe.src = "intent://com.android.settings/#Intent;scheme=android-app;end";
+      document.body.appendChild(iframe);
     }
     function abrirLauncher() {
       window.location.href = "intent://com.android.launcher3/#Intent;scheme=android-app;end";
@@ -190,6 +193,6 @@
       link.click();
     }
   </script>
-  <div class="footer">Powered by Nikki ❤</div>
+  <div class="footer">Powered by Nikki (❁´◡`❁)</div>
 </body>
 </html>
