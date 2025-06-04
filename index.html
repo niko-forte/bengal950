@@ -9,6 +9,7 @@
       background-color: #f4f4f4;
       text-align: center;
       padding-top: 50px;
+      transition: background-color 0.3s, color 0.3s;
     }
     h1 {
       color: #333;
@@ -38,6 +39,24 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+    pre {
+      text-align: left;
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 90%;
+      overflow-x: auto;
+    }
+    .dark-mode {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+    .dark-mode pre {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
   </style>
 </head>
 <body>
@@ -50,10 +69,17 @@
   <button class="button" onclick="llamar()">Llamar al *444</button>
   <button class="button" onclick="marcarIMEI()">Mostrar IMEI</button>
   <button class="button" onclick="recargarPagina()">Recargar Página</button>
+  <button class="button" onclick="toggleDarkMode()">Alternar Modo Oscuro</button>
   <div class="url-box">
     <input type="text" id="urlInput" placeholder="Introduce una URL">
     <button class="button" onclick="irAUrl()">Ir a URL</button>
   </div>
+  <br>
+  <button class="button" onclick="mostrarInformacion()">Mostrar Información del Dispositivo</button>
+  <button class="button" onclick="copiarInformacion()">Copiar Información</button>
+  <button class="button" onclick="descargarInformacion()">Descargar Información</button>
+  <pre id="info"></pre>
+
   <script>
     function abrirConfiguracion() {
       window.location.href = "intent://com.android.settings/#Intent;scheme=android-app;end";
@@ -88,6 +114,82 @@
         alert("Por favor, introduce una URL válida.");
       }
     }
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+    function mostrarInformacion() {
+      const info = document.getElementById("info");
+      const start = performance.now();
+      requestAnimationFrame(() => {
+        const fps = Math.round(1000 / (performance.now() - start));
+
+        let contenido = "=== Información del Navegador ===\n";
+        contenido += `User Agent: ${navigator.userAgent}\n`;
+        contenido += `Plataforma: ${navigator.platform}\n`;
+        contenido += `Idioma: ${navigator.language}\n`;
+        contenido += `Zona Horaria: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n`;
+
+        if (navigator.connection) {
+          contenido += `\n=== Red ===\n`;
+          contenido += `Tipo de conexión: ${navigator.connection.effectiveType}\n`;
+          contenido += `Downlink: ${navigator.connection.downlink} Mbps\n`;
+        }
+
+        navigator.getBattery?.().then(battery => {
+          contenido += `\n=== Batería ===\n`;
+          contenido += `Nivel: ${Math.round(battery.level * 100)}%\n`;
+          contenido += `Cargando: ${battery.charging ? "Sí" : "No"}\n`;
+          info.textContent = contenido;
+        });
+
+        navigator.geolocation?.getCurrentPosition(pos => {
+          contenido += `\n=== Geolocalización ===\n`;
+          contenido += `Latitud: ${pos.coords.latitude}\n`;
+          contenido += `Longitud: ${pos.coords.longitude}\n`;
+          info.textContent = contenido;
+        });
+
+        navigator.mediaDevices?.enumerateDevices().then(devices => {
+          contenido += `\n=== Dispositivos Multimedia ===\n`;
+          devices.forEach(d => contenido += `${d.kind}: ${d.label || "(sin nombre)"}\n`);
+          info.textContent = contenido;
+        });
+
+        navigator.permissions?.query({ name: "geolocation" }).then(result => {
+          contenido += `\n=== Permisos ===\nGeolocalización: ${result.state}\n`;
+          info.textContent = contenido;
+        });
+
+        if (Notification.permission !== "denied") {
+          Notification.requestPermission().then(p => {
+            if (p === "granted") {
+              new Notification("Prueba de notificación", { body: "¡Hola desde tu navegador!" });
+            }
+          });
+        }
+
+        window.addEventListener("deviceorientation", event => {
+          contenido += `\n=== Orientación del Dispositivo ===\n`;
+          contenido += `Alpha: ${event.alpha}\nBeta: ${event.beta}\nGamma: ${event.gamma}\n`;
+          info.textContent = contenido;
+        }, { once: true });
+
+        info.textContent = contenido;
+      });
+    }
+    function copiarInformacion() {
+      const text = document.getElementById("info").textContent;
+      navigator.clipboard.writeText(text).then(() => alert("Información copiada al portapapeles."));
+    }
+    function descargarInformacion() {
+      const text = document.getElementById("info").textContent;
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "informacion_dispositivo.txt";
+      link.click();
+    }
   </script>
+  <div class="footer">Powered by Nikki ❤</div>
 </body>
 </html>
