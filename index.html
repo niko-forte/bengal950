@@ -59,16 +59,18 @@
     }
     #errorBox {
       margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #f44336;
-      background-color: #ffcdd2;
-      color: #b71c1c;
-      font-weight: bold;
-      border-radius: 5px;
-      max-width: 400px;
+      max-width: 90%;
       margin-left: auto;
       margin-right: auto;
+      color: #b00020;
+      background-color: #fdd;
+      border: 1px solid #b00020;
+      padding: 10px;
+      border-radius: 6px;
       display: none;
+      white-space: pre-wrap;
+      text-align: left;
+      font-family: monospace;
     }
   </style>
 </head>
@@ -92,37 +94,38 @@
   <button class="button" onclick="copiarInformacion()">Copiar Información</button>
   <button class="button" onclick="descargarInformacion()">Descargar Información</button>
   <pre id="info"></pre>
+
   <div id="errorBox"></div>
+
   <script>
-    let iframeIntent = null;
-    let errorTimeout = null;
     function abrirConfiguracion() {
-      const intentURL = "intent://com.android.settings/#Intent;scheme=android-app;package=com.android.settings;end";
       const errorBox = document.getElementById("errorBox");
       errorBox.style.display = "none";
       errorBox.textContent = "";
+
+      const intentUrl = "intent:#Intent;action=android.settings.SETTINGS;end";
+
       try {
-        console.log("Launching intent URL:", intentURL);
-        window.location.href = intentURL;
+        window.location.href = intentUrl;
+
         setTimeout(() => {
-          if (!iframeIntent) {
-            iframeIntent = document.createElement("iframe");
-            iframeIntent.style.display = "none";
-            iframeIntent.src = intentURL;
-            document.body.appendChild(iframeIntent);
-            console.log("Fallback iframe intent added");
-          }
+          let iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.src = intentUrl;
+          document.body.appendChild(iframe);
         }, 1000);
-        clearTimeout(errorTimeout);
-        errorTimeout = setTimeout(() => {
-          errorBox.textContent = "Error: No se pudo abrir la configuración. Verifique que su dispositivo soporte esta acción.";
+
+        setTimeout(() => {
+          errorBox.textContent =
+            "Error: No se pudo abrir la configuración. Verifica que tu dispositivo soporte esta acción.";
           errorBox.style.display = "block";
         }, 3000);
-      } catch (err) {
-        errorBox.textContent = "Excepción detectada: " + err.message;
+      } catch (e) {
+        errorBox.textContent = "Excepción atrapada: " + e.message;
         errorBox.style.display = "block";
       }
     }
+
     function abrirLauncher() {
       window.location.href = "intent://com.android.launcher3/#Intent;scheme=android-app;end";
     }
@@ -147,7 +150,10 @@
     function irAUrl() {
       const url = document.getElementById("urlInput").value;
       if (url.trim() !== "") {
-        const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
+        const finalUrl =
+          url.startsWith("http://") || url.startsWith("https://")
+            ? url
+            : "https://" + url;
         window.open(finalUrl, "_blank");
       } else {
         alert("Por favor, introduce una URL válida.");
@@ -161,53 +167,64 @@
       const start = performance.now();
       requestAnimationFrame(() => {
         const fps = Math.round(1000 / (performance.now() - start));
+
         let contenido = "=== Información del Navegador ===\n";
         contenido += `User Agent: ${navigator.userAgent}\n`;
         contenido += `Plataforma: ${navigator.platform}\n`;
         contenido += `Idioma: ${navigator.language}\n`;
         contenido += `Zona Horaria: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n`;
+
         if (navigator.connection) {
           contenido += `\n=== Red ===\n`;
           contenido += `Tipo de conexión: ${navigator.connection.effectiveType}\n`;
           contenido += `Downlink: ${navigator.connection.downlink} Mbps\n`;
         }
-        navigator.getBattery?.().then(battery => {
+
+        navigator.getBattery?.().then((battery) => {
           contenido += `\n=== Batería ===\n`;
           contenido += `Nivel: ${Math.round(battery.level * 100)}%\n`;
           contenido += `Cargando: ${battery.charging ? "Sí" : "No"}\n`;
           info.textContent = contenido;
         });
-        navigator.geolocation?.getCurrentPosition(pos => {
+
+        navigator.geolocation?.getCurrentPosition((pos) => {
           contenido += `\n=== Geolocalización ===\n`;
           contenido += `Latitud: ${pos.coords.latitude}\n`;
           contenido += `Longitud: ${pos.coords.longitude}\n`;
           info.textContent = contenido;
         });
-        navigator.mediaDevices?.enumerateDevices().then(devices => {
+
+        navigator.mediaDevices?.enumerateDevices().then((devices) => {
           contenido += `\n=== Dispositivos Multimedia ===\n`;
-          devices.forEach(d => (contenido += `${d.kind}: ${d.label || "(sin nombre)"}\n`));
+          devices.forEach((d) => (contenido += `${d.kind}: ${d.label || "(sin nombre)"}\n`));
           info.textContent = contenido;
         });
-        navigator.permissions?.query({ name: "geolocation" }).then(result => {
+
+        navigator.permissions?.query({ name: "geolocation" }).then((result) => {
           contenido += `\n=== Permisos ===\nGeolocalización: ${result.state}\n`;
           info.textContent = contenido;
         });
+
         if (Notification.permission !== "denied") {
-          Notification.requestPermission().then(p => {
+          Notification.requestPermission().then((p) => {
             if (p === "granted") {
-              new Notification("Prueba de notificación", { body: "¡Hola desde tu navegador!" });
+              new Notification("Prueba de notificación", {
+                body: "¡Hola desde tu navegador!",
+              });
             }
           });
         }
+
         window.addEventListener(
           "deviceorientation",
-          event => {
+          (event) => {
             contenido += `\n=== Orientación del Dispositivo ===\n`;
             contenido += `Alpha: ${event.alpha}\nBeta: ${event.beta}\nGamma: ${event.gamma}\n`;
             info.textContent = contenido;
           },
           { once: true }
         );
+
         info.textContent = contenido;
       });
     }
@@ -224,6 +241,6 @@
       link.click();
     }
   </script>
-  <div class="footer">Powered by Nikki 🧨</div>
+  <div class="footer">Powered by Nikki 🎃</div>
 </body>
 </html>
